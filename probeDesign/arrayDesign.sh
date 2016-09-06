@@ -1,0 +1,12 @@
+./array_design.pl -t Carlia_preMasked.tsv -i 15mer_indexed.txt -d 3 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Carlia/ -o /home/singhal/Desktop/arrayDesign/Carlia_3/
+./array_design.pl -t Carlia_preMasked.tsv -i 15mer_indexed.txt -d 4 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Carlia/ -o /home/singhal/Desktop/arrayDesign/Carlia_4/
+./array_design.pl -t Carlia_preMasked.tsv -i 15mer_indexed.txt -d 5 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Carlia/ -o /home/singhal/Desktop/arrayDesign/Carlia_5/
+./array_design.pl -t Lampro1_preMasked.tsv -i 15mer_indexed.txt -d 3 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Lampro1/ -o /home/singhal/Desktop/arrayDesign/Lampro1_3/
+./array_design.pl -t Lampro1_preMasked.tsv -i 15mer_indexed.txt -d 4 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Lampro1/ -o /home/singhal/Desktop/arrayDesign/Lampro1_4/
+./array_design.pl -t Lampro1_preMasked.tsv -i 15mer_indexed.txt -d 5 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Lampro1/ -o /home/singhal/Desktop/arrayDesign/Lampro1_5/
+./array_design.pl -t Lampro2_preMasked.tsv -i 15mer_indexed.txt -d 3 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Lampro2/ -o /home/singhal/Desktop/arrayDesign/Lampro2_3/
+./array_design.pl -t Lampro2_preMasked.tsv -i 15mer_indexed.txt -d 4 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Lampro2/ -o /home/singhal/Desktop/arrayDesign/Lampro2_4/
+./array_design.pl -t Lampro2_preMasked.tsv -i 15mer_indexed.txt -d 5 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Lampro2/ -o /home/singhal/Desktop/arrayDesign/Lampro2_5/
+./array_design.pl -t Sapro_preMasked.tsv -i 15mer_indexed.txt -d 3 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Sapro/ -o /home/singhal/Desktop/arrayDesign/Sapro_3/
+./array_design.pl -t Sapro_preMasked.tsv -i 15mer_indexed.txt -d 4 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Sapro/ -o /home/singhal/Desktop/arrayDesign/Sapro_4/
+./array_design.pl -t Sapro_preMasked.tsv -i 15mer_indexed.txt -d 5 -f 0 -p 60 -g /home/singhal/Desktop/arrayDesign/Sapro/ -o /home/singhal/Desktop/arrayDesign/Sapro_5/
