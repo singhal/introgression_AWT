@@ -10,6 +10,7 @@ The scripts for the exome capture part (assembly, annotation, etc) is split over
 - `2-ScrubReads`: used to scrub reads
 - `3-GenerateAssemblies`: used to assemble reads
 - `4-FinalAssembly`: used to assemble across assemblies
+
 ### Pipeline 2: https://github.com/singhal/exomeCapture
 - `7annotateContigs.pl`: used to match assembles to original targets
 - `8initialSNPset.pl`: used to map reads and call SNPs in transcriptome data
