@@ -71,39 +71,7 @@ def cline(eval, *params):
     # needs to return positive so minimization func works
     return -1 *np.sum(pop_lnls)
 
-
-def cline_nls(eval, *params):
-    '''
-    fit cline using NLS
-    found that it often works better 
-    because less sensitive to one 
-    errant point
-    '''
-
-    # parameters to evaluate
-    c = eval[0]
-    w = eval[1]
-
-    # fixed parameters
-    _af = params[0]
-    _dists = params[1]
-    _sample_sizes = params[2]
-
-    # based on standard sigmoidal cline
-    exp_af = [((1 + math.tanh(2* (dist - c) / float(w))) / 2.0) for dist in _dists]
-    # get rid of values very close to 0 or 1
-    # leads to weird edge behavior
-    exp_af = get_rid_of_extremes(exp_af)
-    
-    # calculate squared distances
-    pop_diffs = []
-    for pobs, pexp in zip(_af, exp_af):
-        pop_diff = (pobs - pexp) ** 2
-        pop_diffs.append(pop_diff)
-        
-    return np.sum(pop_diffs)
-
-
+  
 def get_cline(c, w, dists, pmin, pmax):
     '''
     get cline values to use for plotting
@@ -230,9 +198,7 @@ for (locus, pos), cur_d in d:
                 af = rescale(af, pmin, pmax)
                 
                 dists = clines.distance.tolist()
-                # this isn't exactly right, but is close
-                # enough
-                # plus, with sampling error ...
+                # get sample sizes
                 sample_sizes = [16] * len(dists)
 
                 # fitting procedure prone to getting stuck in local minima
