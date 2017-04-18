@@ -4,6 +4,14 @@ import numpy as np
 contacts = ['sjo', 'nBMB', 'gillies', 'carlia']
 dist = [0, 100, 200, 500, 1000, 2000, 3000, 4000, 5000]
 
+exons = {}
+shared = '/Users/sonal/thesisWork/introgression/shared_exons.txt'
+f = open(shared, 'r')
+for l in f:
+	l = l.rstrip()
+	exons[l] = 1
+f.close()
+
 print('contact\tdist\tmoransI\tImin\tImax\tnum')
 for contact in contacts:
 	file = "/Users/sonal/thesisWork/introgression/LD/LD_%s.out" % contact
@@ -14,11 +22,14 @@ for contact in contacts:
 		l = l.rstrip()
 		
 		t = re.split('\t', l)
-		# 2 for more local version
-		# 6 does a more global version
-		if t[2] not in d:
-			d[t[2]] = []
-		d[t[2]].append(t)
+		# only study those exons in shared
+		exon = re.sub('_\d+$', '', t[2])
+		if exon in exons:
+			# 2 for more local version
+			# 6 does a more global version
+			if t[2] not in d:
+				d[t[2]] = []
+			d[t[2]].append(t)
 
 	f.close()
 

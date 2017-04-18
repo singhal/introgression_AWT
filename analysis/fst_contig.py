@@ -31,28 +31,6 @@ def get_seq(contact):
 	return seq
 
 
-def get_fst(pop1, pop2):
-	a1_1 = pop1.count('0') / float(len(pop1))
-	a2_1 = pop1.count('1') / float(len(pop1))
-	a1_2 = pop2.count('0') / float(len(pop2))
-	a2_2 = pop2.count('1') / float(len(pop2))
-
-	het1 = 2 * a1_1 * a2_1
-	het2 = 2 * a1_2 * a2_2
-	avg_het = (het1 + het2) / 2.0
-
-	a1 = (pop1.count('0') + pop2.count('0')) / float(len(pop1) + len(pop2))
-	a2 = (pop1.count('1') + pop2.count('1')) / float(len(pop1) + len(pop2))
-	het = 2 * a1 * a2
-
-	if het > 0:
-		fst = (het - avg_het) / het
-	else:
-		fst = 0
-
-	return fst
-
-
 def get_div_data(contact):
 	vcffile = os.path.join(dir, 'vcf', '%s.vcf' % contact)
 	f = open(vcffile, 'r')
@@ -73,15 +51,39 @@ def get_div_data(contact):
 				pop1 = [x for x in genos[0:10] if x != '.']
 				pop2 = [x for x in genos[10:] if x != '.']
 
-				fst = get_fst(pop1, pop2)
-
-				if fst > 0:
+				if len(pop1) > 0 and len(pop2) > 0:
 					if d[0] not in div:
 						div[d[0]] = {}
-					div[d[0]][int(d[1])] = fst
+					div[d[0]][int(d[1])] = {'geno': [pop1.count('1'), pop2.count('1')],
+					                        'ss': [len(pop1), len(pop2)] 
+					                        }
 
 	return div
 
+def fst_estimator(counts, sample_sizes):
+	'''
+	modified from G. Bradford's R code in bedassle
+	'calculate.pairwise.Fst'
+
+	both inputs are arrays where each row is an individual
+	and each column is a SNP
+	'''
+
+	counts = np.array(counts)
+	sample_sizes = np.array(sample_sizes).astype('float')
+
+	pop_af = counts / sample_sizes
+	mean_af = np.sum(counts, axis=0) / np.sum(sample_sizes, axis = 0)
+
+	MSP = np.sum((pop_af - mean_af) ** 2 * sample_sizes, axis=0)
+	MSG = np.sum((1 - pop_af) * pop_af * sample_sizes, axis=0) \
+                * (1 / np.sum(sample_sizes - 1, axis=0))
+	n_c = np.sum(sample_sizes, axis = 0) - np.sum(sample_sizes ** 2, axis=0) \
+	                / np.sum(sample_sizes, axis=0)
+
+	fst = np.sum(MSP - MSG) / np.sum(MSP + (n_c - 1) * MSG)
+
+	return fst
 
 def summarize(seq, div, contact):
 	outfile = os.path.join(dir, 'summaryStatistics2', '%s.contig.fst.csv' % contact)
@@ -93,14 +95,30 @@ def summarize(seq, div, contact):
 		seq_len = len(seq[c]['seq'])
 		cds = seq[c]['loc'][1] - seq[c]['loc'][0]
 		if c in div:
-			seq_fst = np.mean([div[c][x] for x in div[c]])
 			all_snps = len(div[c])
+			counts = [[],[]]
+			ss = [[],[]]
+			for pos in div[c]:
+				counts[0].append(div[c][pos]['geno'][0])
+				counts[1].append(div[c][pos]['geno'][1])
+				ss[0].append(div[c][pos]['ss'][0])
+				ss[1].append(div[c][pos]['ss'][1])
+			if len(counts[0]) > 0:
+				seq_fst = fst_estimator(counts, ss)
+			else:
+				seq_fst = 0
 
-			pos = [x for x in div[c] if (x >= seq[c]['loc'][0] and x <= seq[c]['loc'][1])]
-			cds_snps = len(pos)
-			fst = [div[c][x] for x in pos]
-			if len(fst) > 0:
-				cds_fst = np.mean(fst)
+			cds_pos = [x for x in div[c] if (x >= seq[c]['loc'][0] and x <= seq[c]['loc'][1])]
+			cds_snps = len(cds_pos)
+			counts = [[],[]]
+			ss = [[],[]]
+			for pos in cds_pos:
+				counts[0].append(div[c][pos]['geno'][0])
+				counts[1].append(div[c][pos]['geno'][1])
+				ss[0].append(div[c][pos]['ss'][0])
+				ss[1].append(div[c][pos]['ss'][1])
+			if len(counts[0]) > 0:
+				cds_fst = fst_estimator(counts, ss)
 			else:
 				cds_fst = 0
 		else:
